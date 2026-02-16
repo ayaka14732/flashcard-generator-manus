@@ -10,21 +10,28 @@ import * as TshetUinh from "tshet-uinh";
 interface FlashcardPair {
   word: string;
   translation: string;
+  wordHtml?: string;
+  translationHtml?: string;
 }
 
 const DEFAULT_POST_PROCESSING = `// Post-processing function
 // Receives: { word, translation }
-// Returns: { word, translation }
+// Returns: { word, translation } OR { word, translation, wordHtml?, translationHtml? }
 // Note: tshet-uinh library is pre-loaded and available as TshetUinh
 
 function process({ word, translation }) {
-  // Example: Convert to uppercase
+  // Example 1: Plain text transformation
   // return { word: word.toUpperCase(), translation: translation.toUpperCase() };
   
-  // Example: Add prefix
-  // return { word: "→ " + word, translation: "← " + translation };
+  // Example 2: HTML string transformation (for rich formatting)
+  // return { 
+  //   word, 
+  //   translation,
+  //   wordHtml: '<span style="color: red;">' + word + '</span>',
+  //   translationHtml: '<span style="font-size: 2em;">' + translation + '</span>'
+  // };
   
-  // Example: Use tshet-uinh library
+  // Example 3: Use tshet-uinh library
   // const 音韻地位 = TshetUinh.音韻地位.from描述('羣開三A支平');
   // return { word: 音韻地位.描述, translation: translation };
   
@@ -102,12 +109,22 @@ export default function Home() {
         const func = eval(`(${postProcessingCode})`);
         return func.call({ TshetUinh }, pair);
       })();
-      if (
-        processedPair &&
-        typeof processedPair.word === "string" &&
-        typeof processedPair.translation === "string"
-      ) {
-        return processedPair;
+      if (processedPair) {
+        // Support both plain string and HTML string returns
+        const result: FlashcardPair = {
+          word: typeof processedPair.word === "string" ? processedPair.word : pair.word,
+          translation: typeof processedPair.translation === "string" ? processedPair.translation : pair.translation,
+        };
+        
+        // If wordHtml or translationHtml is provided, use it
+        if (typeof processedPair.wordHtml === "string") {
+          result.wordHtml = processedPair.wordHtml;
+        }
+        if (typeof processedPair.translationHtml === "string") {
+          result.translationHtml = processedPair.translationHtml;
+        }
+        
+        return result;
       }
     } catch (error) {
       console.error("Post-processing error:", error);
@@ -189,6 +206,8 @@ export default function Home() {
         <FlashcardDisplay
           word={currentPair.word}
           translation={currentPair.translation}
+          wordHtml={currentPair.wordHtml}
+          translationHtml={currentPair.translationHtml}
           displayState={displayState}
         />
       )}

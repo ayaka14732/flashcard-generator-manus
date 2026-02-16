@@ -34,17 +34,22 @@ interface UnifiedSettingsDialogProps {
 
 const DEFAULT_CODE = `// Post-processing function
 // Receives: { word, translation }
-// Returns: { word, translation }
+// Returns: { word, translation } OR { word, translation, wordHtml?, translationHtml? }
 // Note: tshet-uinh library is pre-loaded and available as TshetUinh
 
 function process({ word, translation }) {
-  // Example: Convert to uppercase
+  // Example 1: Plain text transformation
   // return { word: word.toUpperCase(), translation: translation.toUpperCase() };
   
-  // Example: Add prefix
-  // return { word: "→ " + word, translation: "← " + translation };
+  // Example 2: HTML string transformation (for rich formatting)
+  // return { 
+  //   word, 
+  //   translation,
+  //   wordHtml: '<span style="color: red;">' + word + '</span>',
+  //   translationHtml: '<span style="font-size: 2em;">' + translation + '</span>'
+  // };
   
-  // Example: Use tshet-uinh library
+  // Example 3: Use tshet-uinh library
   // const 音韻地位 = TshetUinh.音韻地位.from描述('羣開三A支平');
   // return { word: 音韻地位.描述, translation: translation };
   
@@ -151,6 +156,7 @@ export default function UnifiedSettingsDialog({
 
             {/* General Tab */}
             <TabsContent value="general" className="flex-1 overflow-y-auto space-y-6 p-4">
+              <div className="max-w-2xl">
               {/* Language Switcher */}
               <div className="space-y-3">
                 <Label>Interface Language</Label>
@@ -170,7 +176,7 @@ export default function UnifiedSettingsDialog({
                 <p className="text-sm text-muted-foreground">
                   {t.vocabularyUrlHint}
                 </p>
-                <Button onClick={onLoadVocabulary} className="w-full">
+                <Button onClick={onLoadVocabulary} className="w-full max-w-md">
                   Load Vocabulary
                 </Button>
               </div>
@@ -189,10 +195,12 @@ export default function UnifiedSettingsDialog({
                   onCheckedChange={setSwapWordTranslation}
                 />
               </div>
+              </div>
             </TabsContent>
 
             {/* Timing Tab */}
             <TabsContent value="timing" className="flex-1 overflow-y-auto space-y-6 p-4">
+              <div className="max-w-2xl">
               <div className="space-y-3">
                 <Label htmlFor="word-time">{t.wordDisplayTime}</Label>
                 <Input
@@ -224,6 +232,7 @@ export default function UnifiedSettingsDialog({
                     <li key={index}>{instruction}</li>
                   ))}
                 </ul>
+              </div>
               </div>
             </TabsContent>
 
