@@ -1,12 +1,3 @@
-/**
- * SettingsPanel Component
- * Design: Brutalist Digital Learning
- * - Side panel with sharp rectangular design
- * - IBM Plex Mono for all UI text
- * - Minimal padding, dense information layout
- * - No rounded corners, high contrast inputs
- */
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,31 +46,30 @@ export default function SettingsPanel({
       />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 w-full md:w-[480px] bg-card border-l-2 border-border z-50 overflow-y-auto">
+      <div className="fixed right-0 top-0 bottom-0 w-full md:w-[480px] bg-card border-l border-border z-50 overflow-y-auto">
         <div className="p-6">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8 pb-4 border-b-2 border-border">
-            <h2 className="font-mono text-xl font-medium tracking-tight">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
+            <h2 className="text-xl font-semibold">
               {t.configuration}
             </h2>
             <Button
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="h-8 w-8"
             >
               <X className="h-5 w-5" />
             </Button>
           </div>
 
           {/* Language Switcher */}
-          <div className="mb-6 pb-6 border-b-2 border-border">
+          <div className="mb-6 pb-6 border-b border-border">
             <LanguageSwitcher />
           </div>
 
           {/* Vocabulary URL */}
           <div className="space-y-3 mb-6">
-            <Label htmlFor="vocab-url" className="font-mono text-sm font-medium">
+            <Label htmlFor="vocab-url">
               {t.vocabularyUrl}
             </Label>
             <Input
@@ -88,23 +78,22 @@ export default function SettingsPanel({
               value={vocabularyUrl}
               onChange={(e) => setVocabularyUrl(e.target.value)}
               placeholder={t.vocabularyUrlPlaceholder}
-              className="font-mono text-sm h-10"
             />
-            <p className="font-mono text-xs text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               {t.vocabularyUrlHint}
             </p>
             <Button
               onClick={onLoadVocabulary}
-              className="w-full font-mono text-sm h-10"
+              className="w-full"
             >
               {t.loadVocabulary}
             </Button>
           </div>
 
           {/* Timing Controls */}
-          <div className="space-y-6 mb-6 pb-6 border-b-2 border-border">
+          <div className="space-y-6 mb-6 pb-6 border-b border-border">
             <div className="space-y-3">
-              <Label htmlFor="word-time" className="font-mono text-sm font-medium">
+              <Label htmlFor="word-time">
                 {t.wordDisplayTime}
               </Label>
               <Input
@@ -114,12 +103,11 @@ export default function SettingsPanel({
                 step="0.5"
                 value={wordDisplayTime}
                 onChange={(e) => setWordDisplayTime(parseFloat(e.target.value))}
-                className="font-mono text-sm h-10"
               />
             </div>
 
             <div className="space-y-3">
-              <Label htmlFor="both-time" className="font-mono text-sm font-medium">
+              <Label htmlFor="both-time">
                 {t.bothDisplayTime}
               </Label>
               <Input
@@ -129,18 +117,17 @@ export default function SettingsPanel({
                 step="0.5"
                 value={bothDisplayTime}
                 onChange={(e) => setBothDisplayTime(parseFloat(e.target.value))}
-                className="font-mono text-sm h-10"
               />
             </div>
           </div>
 
           {/* Swap Option */}
-          <div className="flex items-center justify-between mb-6 pb-6 border-b-2 border-border">
+          <div className="flex items-center justify-between mb-6 pb-6 border-b border-border">
             <div className="space-y-1">
-              <Label htmlFor="swap" className="font-mono text-sm font-medium">
+              <Label htmlFor="swap">
                 {t.swapWordTranslation}
               </Label>
-              <p className="font-mono text-xs text-muted-foreground">
+              <p className="text-sm text-muted-foreground">
                 {t.swapWordTranslationHint}
               </p>
             </div>
@@ -153,8 +140,8 @@ export default function SettingsPanel({
 
           {/* Instructions */}
           <div className="space-y-2">
-            <h3 className="font-mono text-sm font-medium">{t.instructions}</h3>
-            <ul className="font-mono text-xs text-muted-foreground space-y-1 list-disc list-inside">
+            <h3 className="text-sm font-semibold">{t.instructions}</h3>
+            <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
               {t.instructionsList.map((instruction, index) => (
                 <li key={index}>{instruction}</li>
               ))}

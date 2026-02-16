@@ -10,7 +10,6 @@ export default function LanguageSwitcher() {
         variant={language === "en" ? "default" : "outline"}
         size="sm"
         onClick={() => setLanguage("en")}
-        className="font-mono text-xs h-8 px-3"
       >
         EN
       </Button>
@@ -18,7 +17,6 @@ export default function LanguageSwitcher() {
         variant={language === "zh" ? "default" : "outline"}
         size="sm"
         onClick={() => setLanguage("zh")}
-        className="font-mono text-xs h-8 px-3"
       >
         中文
       </Button>
@@ -26,7 +24,6 @@ export default function LanguageSwitcher() {
         variant={language === "ja" ? "default" : "outline"}
         size="sm"
         onClick={() => setLanguage("ja")}
-        className="font-mono text-xs h-8 px-3"
       >
         日本語
       </Button>

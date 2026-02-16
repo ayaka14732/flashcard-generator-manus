@@ -65,20 +65,18 @@ export default function FlashcardDisplay({
       <div className="relative z-10 text-center">
         {/* Word */}
         <div
-          className="font-display text-6xl md:text-7xl lg:text-8xl text-white mb-8"
-          style={{ letterSpacing: "-0.02em" }}
+          className="text-6xl md:text-7xl lg:text-8xl text-white mb-8 font-bold"
         >
           {word}
         </div>
 
         {/* Translation */}
         <div
-          className={`font-display text-4xl md:text-5xl lg:text-6xl ${
+          className={`text-4xl md:text-5xl lg:text-6xl ${
             displayState === "both" ? "opacity-100" : "opacity-0"
           }`}
           style={{
             color: "oklch(0.7 0.1 210)",
-            letterSpacing: "-0.02em",
           }}
         >
           {translation}

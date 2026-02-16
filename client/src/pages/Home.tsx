@@ -15,6 +15,7 @@ import { useI18n } from "@/contexts/I18nContext";
 import { Code, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import * as TshetUinh from "tshet-uinh";
 
 interface FlashcardPair {
   word: string;
@@ -104,8 +105,12 @@ export default function Home() {
 
     // Apply post-processing
     try {
+      // Make TshetUinh available in eval context
       // eslint-disable-next-line no-eval
-      const processedPair = eval(`(${postProcessingCode})(${JSON.stringify(pair)})`);
+      const processedPair = (function() {
+        const func = eval(`(${postProcessingCode})`);
+        return func.call({ TshetUinh }, pair);
+      })();
       if (
         processedPair &&
         typeof processedPair.word === "string" &&
@@ -178,16 +183,16 @@ export default function Home() {
 
           {/* Welcome Message */}
           <div className="relative z-10 text-center space-y-6">
-            <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-white mb-4">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl text-white mb-4 font-bold">
               {t.welcomeTitle}
             </h1>
-            <p className="font-mono text-lg text-muted-foreground max-w-2xl mx-auto px-4">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto px-4">
               {t.welcomeSubtitle}
             </p>
             <Button
               onClick={() => setSettingsOpen(true)}
               size="lg"
-              className="font-mono text-sm h-12 px-8"
+              className="h-12 px-8"
             >
               {t.openSettings}
             </Button>
@@ -221,7 +226,7 @@ export default function Home() {
       {isPlaying && flashcards.length > 0 && (
         <div className="fixed top-6 left-6 z-30">
           <div className="bg-card/90 backdrop-blur border-2 border-border px-4 py-2">
-            <p className="font-mono text-sm">
+            <p className="text-sm">
               {t.progressFormat
                 .replace("{current}", (currentIndex + 1).toString())
                 .replace("{total}", flashcards.length.toString())}

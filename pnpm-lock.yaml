@@ -160,6 +160,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.1.14)
+      tshet-uinh:
+        specifier: ^0.15.4
+        version: 0.15.4
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.1(@types/react@19.2.1))(@types/react@19.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -3266,6 +3269,10 @@ packages:
   ts-dedent@2.2.0:
     resolution: {integrity: sha512-q5W7tVM71e2xjHZTlgfTDoPF/SmqKG5hddq9SzR49CH2hayqRKJtQ4mtRlSxKaJlR/+9rEM+mnBHf7I2/BQcpQ==}
     engines: {node: '>=6.10'}
+
+  tshet-uinh@0.15.4:
+    resolution: {integrity: sha512-Bz93oMaSAkMp7pA6kKeBG3s860r9wbUPG1K/brkSkL01GQUK8okKVZcm0ZOVXCdBCWJXz00CXq+jm2IcYlfdkA==}
+    engines: {node: ^18.18 || ^20.9 || ^21 || >=22}
 
   tslib@2.8.1:
     resolution: {integrity: sha512-oJFu94HQb+KVduSUQL7wnpmqnfmLsOA/nAh6b6EH0wCEoK0/mPeXU6c3wKDV83MkOuHPRHtSXKKU99IBazS/2w==}
@@ -6922,6 +6929,8 @@ snapshots:
   trough@2.2.0: {}
 
   ts-dedent@2.2.0: {}
+
+  tshet-uinh@0.15.4: {}
 
   tslib@2.8.1: {}
 
