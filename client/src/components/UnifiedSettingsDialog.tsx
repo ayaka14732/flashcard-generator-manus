@@ -129,16 +129,16 @@ export default function UnifiedSettingsDialog({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="w-screen h-screen max-w-none rounded-none overflow-hidden flex flex-col bg-white dark:bg-white text-black">
+        <DialogContent className="max-w-[1400px] w-[98vw] h-[98vh] overflow-hidden flex flex-col">
           <DialogHeader>
-            <DialogTitle className="text-2xl text-black">{t.configuration}</DialogTitle>
-            <DialogDescription className="text-gray-600">
+            <DialogTitle className="text-2xl">{t.configuration}</DialogTitle>
+            <DialogDescription>
               Configure vocabulary, timing, and post-processing code
             </DialogDescription>
           </DialogHeader>
 
           <Tabs defaultValue="general" className="flex-1 flex flex-col min-h-0">
-            <TabsList className="grid w-full grid-cols-3 bg-gray-100">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="general">General</TabsTrigger>
               <TabsTrigger value="timing">Timing</TabsTrigger>
               <TabsTrigger value="code">
@@ -150,7 +150,7 @@ export default function UnifiedSettingsDialog({
             </TabsList>
 
             {/* General Tab */}
-            <TabsContent value="general" className="flex-1 overflow-y-auto space-y-6 p-6 bg-white">
+            <TabsContent value="general" className="flex-1 overflow-y-auto space-y-6 p-4">
               {/* Language Switcher */}
               <div className="space-y-3">
                 <Label>Interface Language</Label>
@@ -192,7 +192,7 @@ export default function UnifiedSettingsDialog({
             </TabsContent>
 
             {/* Timing Tab */}
-            <TabsContent value="timing" className="flex-1 overflow-y-auto space-y-6 p-6 bg-white">
+            <TabsContent value="timing" className="flex-1 overflow-y-auto space-y-6 p-4">
               <div className="space-y-3">
                 <Label htmlFor="word-time">{t.wordDisplayTime}</Label>
                 <Input
@@ -228,14 +228,14 @@ export default function UnifiedSettingsDialog({
             </TabsContent>
 
             {/* Code Editor Tab */}
-            <TabsContent value="code" className="flex-1 flex flex-col space-y-4 min-h-0 p-6 bg-white">
-              <div className="flex-1 min-h-[500px] border-2 border-gray-300 rounded overflow-hidden">
+            <TabsContent value="code" className="flex-1 flex flex-col space-y-4 min-h-0 p-4">
+              <div className="flex-1 min-h-[500px] border border-border rounded overflow-hidden">
                 <Editor
                   height="100%"
                   defaultLanguage="javascript"
                   value={editorValue}
                   onChange={handleEditorChange}
-                  theme="vs-light"
+                  theme="vs-dark"
                   options={{
                     minimap: { enabled: false },
                     fontSize: 14,
@@ -250,11 +250,11 @@ export default function UnifiedSettingsDialog({
 
               {/* Error Display */}
               {error && (
-                <div className="bg-red-50 border-2 border-red-300 p-3 rounded">
-                  <p className="text-sm text-red-700 font-semibold mb-1">
+                <div className="bg-destructive/20 border border-destructive p-3 rounded">
+                  <p className="text-sm text-destructive-foreground font-semibold mb-1">
                     ERROR
                   </p>
-                  <p className="text-sm text-red-600 font-mono">
+                  <p className="text-sm text-destructive-foreground font-mono">
                     {error}
                   </p>
                 </div>
@@ -289,15 +289,15 @@ export default function UnifiedSettingsDialog({
                     <li key={index}>{instruction}</li>
                   ))}
                 </ul>
-                <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded">
+                <div className="mt-3 p-3 bg-muted rounded">
                   <p className="text-sm font-semibold mb-1">tshet-uinh Library</p>
-                  <p className="text-xs text-gray-600 mb-2">
+                  <p className="text-xs text-muted-foreground mb-2">
                     The tshet-uinh library is pre-loaded and available as{" "}
-                    <code className="bg-gray-200 px-1 py-0.5 rounded text-black">
+                    <code className="bg-black/20 px-1 py-0.5 rounded">
                       TshetUinh
                     </code>
                   </p>
-                  <code className="text-xs bg-gray-100 px-2 py-1 rounded block text-black">
+                  <code className="text-xs bg-black/20 px-2 py-1 rounded block">
                     const 音韻地位 = TshetUinh.音韻地位.from描述('羣開三A支平');
                   </code>
                 </div>
