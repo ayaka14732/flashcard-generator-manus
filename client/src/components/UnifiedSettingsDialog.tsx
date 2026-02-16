@@ -129,7 +129,7 @@ export default function UnifiedSettingsDialog({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-6xl w-[95vw] max-h-[95vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-[1400px] w-[98vw] h-[98vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-2xl">{t.configuration}</DialogTitle>
             <DialogDescription>
@@ -229,7 +229,7 @@ export default function UnifiedSettingsDialog({
 
             {/* Code Editor Tab */}
             <TabsContent value="code" className="flex-1 flex flex-col space-y-4 min-h-0 p-4">
-              <div className="flex-1 min-h-0 border border-border rounded overflow-hidden">
+              <div className="flex-1 min-h-[500px] border border-border rounded overflow-hidden">
                 <Editor
                   height="100%"
                   defaultLanguage="javascript"
