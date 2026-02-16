@@ -1,52 +1,14 @@
-/**
- * FlashcardDisplay Component
- * Design: Brutalist Digital Learning
- * - Deep black background with cyan-blue grid pattern
- * - Sharp geometric layout, no rounded corners
- * - High contrast typography with Space Grotesk
- * - Minimal animations (200-300ms transitions)
- */
-
-import { useEffect, useState } from "react";
-
 interface FlashcardDisplayProps {
   word: string;
   translation: string;
-  wordDisplayTime: number;
-  bothDisplayTime: number;
-  onComplete: () => void;
+  displayState: "word" | "both";
 }
-
-type DisplayState = "word-only" | "both" | "transitioning";
 
 export default function FlashcardDisplay({
   word,
   translation,
-  wordDisplayTime,
-  bothDisplayTime,
-  onComplete,
+  displayState,
 }: FlashcardDisplayProps) {
-  const [displayState, setDisplayState] = useState<DisplayState>("word-only");
-  const [isVisible, setIsVisible] = useState(true);
-
-  useEffect(() => {
-    setIsVisible(true);
-    setDisplayState("word-only");
-
-    const wordTimer = setTimeout(() => {
-      setDisplayState("both");
-    }, wordDisplayTime * 1000);
-
-    const bothTimer = setTimeout(() => {
-      onComplete();
-    }, (wordDisplayTime + bothDisplayTime) * 1000);
-
-    return () => {
-      clearTimeout(wordTimer);
-      clearTimeout(bothTimer);
-    };
-  }, [word, translation, wordDisplayTime, bothDisplayTime, onComplete]);
-
   return (
     <div className="fixed inset-0 flex items-center justify-center overflow-hidden">
       {/* Grid Background */}
@@ -64,9 +26,7 @@ export default function FlashcardDisplay({
       {/* Flashcard Content */}
       <div className="relative z-10 text-center">
         {/* Word */}
-        <div
-          className="text-6xl md:text-7xl lg:text-8xl text-white mb-8 font-bold"
-        >
+        <div className="text-6xl md:text-7xl lg:text-8xl text-white mb-8 font-bold">
           {word}
         </div>
 
@@ -82,8 +42,6 @@ export default function FlashcardDisplay({
           {translation}
         </div>
       </div>
-
-
     </div>
   );
 }
