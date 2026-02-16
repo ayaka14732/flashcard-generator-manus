@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
@@ -12,8 +11,8 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useI18n } from "@/contexts/I18nContext";
 import Editor from "@monaco-editor/react";
-import { Save } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import LanguageSwitcher from "./LanguageSwitcher";
 
 interface UnifiedSettingsDialogProps {
@@ -77,276 +76,245 @@ export default function UnifiedSettingsDialog({
   setCode,
 }: UnifiedSettingsDialogProps) {
   const { t } = useI18n();
-  const [editorValue, setEditorValue] = useState(code);
-  const [error, setError] = useState<string | null>(null);
-  const [testResult, setTestResult] = useState<{
-    input: string;
-    output: string;
-  } | null>(null);
+  const [editorCode, setEditorCode] = useState(code);
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [testResult, setTestResult] = useState<string | null>(null);
+  const [showTestResult, setShowTestResult] = useState(false);
 
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
-      setEditorValue(value);
+      setEditorCode(value);
       setHasUnsavedChanges(value !== code);
-      setError(null);
     }
   };
 
-  const handleSave = () => {
-    setCode(editorValue);
+  const handleSaveCode = () => {
+    setCode(editorCode);
     setHasUnsavedChanges(false);
+    toast.success("Code saved successfully");
   };
 
-  const handleTest = async () => {
+  const handleTestCode = () => {
     try {
-      const testData = { word: "hello", translation: "你好" };
-      const TshetUinh = await import("tshet-uinh");
+      const testInput = { word: "test", translation: "測試" };
       // eslint-disable-next-line no-eval
-      const result = (function () {
-        const func = eval(`(${editorValue})`);
-        return func.call({ TshetUinh }, testData);
-      })();
-
-      if (
-        !result ||
-        typeof result.word !== "string" ||
-        typeof result.translation !== "string"
-      ) {
-        setError(t.toastTestError);
-        setTestResult(null);
-      } else {
-        setError(null);
-        setTestResult({
-          input: JSON.stringify(testData, null, 2),
-          output: JSON.stringify(result, null, 2),
-        });
-      }
-    } catch (e) {
-      setError(e instanceof Error ? e.message : "Invalid code");
-      setTestResult(null);
+      const func = eval(`(${editorCode})`);
+      const result = func(testInput);
+      setTestResult(JSON.stringify(result, null, 2));
+      setShowTestResult(true);
+    } catch (error) {
+      setTestResult(`Error: ${error instanceof Error ? error.message : String(error)}`);
+      setShowTestResult(true);
     }
   };
 
-  const handleReset = () => {
-    setEditorValue(DEFAULT_CODE);
-    setHasUnsavedChanges(DEFAULT_CODE !== code);
-    setError(null);
-    setTestResult(null);
+  const handleResetCode = () => {
+    setEditorCode(DEFAULT_CODE);
+    setHasUnsavedChanges(true);
   };
 
   return (
-    <>
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="!w-[90vw] !max-w-[1600px] h-[90vh] !max-h-[90vh] overflow-hidden flex flex-col">
-          <DialogHeader>
-            <DialogTitle className="text-2xl">{t.configuration}</DialogTitle>
-            <DialogDescription>
-              Configure vocabulary, timing, and post-processing code
-            </DialogDescription>
-          </DialogHeader>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="!w-[90vw] !max-w-[1600px] h-[90vh] flex flex-col">
+        <DialogHeader className="flex-shrink-0">
+          <DialogTitle className="text-2xl">{t.settings}</DialogTitle>
+          <p className="text-sm text-muted-foreground">
+            Configure vocabulary, timing, and post-processing code
+          </p>
+        </DialogHeader>
 
-          <Tabs defaultValue="general" className="flex-1 flex flex-col min-h-0">
-            <TabsList className="grid w-full grid-cols-3">
-              <TabsTrigger value="general">General</TabsTrigger>
-              <TabsTrigger value="timing">Timing</TabsTrigger>
-              <TabsTrigger value="code">
-                Code Editor
-                {hasUnsavedChanges && (
-                  <span className="ml-2 h-2 w-2 rounded-full bg-yellow-500" />
-                )}
-              </TabsTrigger>
-            </TabsList>
+        <Tabs defaultValue="config" className="flex-1 flex flex-col min-h-0">
+          <TabsList className="flex-shrink-0 w-full grid grid-cols-2">
+            <TabsTrigger value="config">Configuration</TabsTrigger>
+            <TabsTrigger value="code">Code Editor</TabsTrigger>
+          </TabsList>
 
-            {/* General Tab */}
-            <TabsContent value="general" className="flex-1 overflow-y-auto space-y-6 p-4">
-              <div className="max-w-2xl">
-              {/* Language Switcher */}
-              <div className="space-y-3">
-                <Label>Interface Language</Label>
-                <LanguageSwitcher />
-              </div>
+          {/* Configuration Tab - Merged General + Timing */}
+          <TabsContent value="config" className="flex-1 overflow-y-auto p-6">
+            <div className="grid grid-cols-2 gap-8">
+              {/* Left Column */}
+              <div className="space-y-6">
+                {/* Language Selection */}
+                <div className="space-y-3">
+                  <Label className="text-base font-semibold">Interface Language</Label>
+                  <LanguageSwitcher />
+                </div>
 
-              {/* Vocabulary URL */}
-              <div className="space-y-3">
-                <Label htmlFor="vocab-url">{t.vocabularyUrl}</Label>
-                <Input
-                  id="vocab-url"
-                  type="url"
-                  value={vocabularyUrl}
-                  onChange={(e) => setVocabularyUrl(e.target.value)}
-                  placeholder={t.vocabularyUrlPlaceholder}
-                />
-                <p className="text-sm text-muted-foreground">
-                  {t.vocabularyUrlHint}
-                </p>
-                <Button onClick={onLoadVocabulary} className="w-full max-w-md">
-                  Load Vocabulary
-                </Button>
-              </div>
-
-              {/* Swap Option */}
-              <div className="flex items-center justify-between pt-4 border-t">
-                <div className="space-y-1">
-                  <Label htmlFor="swap">{t.swapWordTranslation}</Label>
+                {/* Vocabulary URL */}
+                <div className="space-y-3">
+                  <Label htmlFor="vocab-url" className="text-base font-semibold">
+                    {t.vocabularyUrl}
+                  </Label>
+                  <Input
+                    id="vocab-url"
+                    value={vocabularyUrl}
+                    onChange={(e) => setVocabularyUrl(e.target.value)}
+                    placeholder="https://example.com/vocabulary.tsv"
+                  />
                   <p className="text-sm text-muted-foreground">
-                    {t.swapWordTranslationHint}
+                    {t.vocabularyUrlHint}
                   </p>
                 </div>
-                <Switch
-                  id="swap"
-                  checked={swapWordTranslation}
-                  onCheckedChange={setSwapWordTranslation}
-                />
-              </div>
-              </div>
-            </TabsContent>
 
-            {/* Timing Tab */}
-            <TabsContent value="timing" className="flex-1 overflow-y-auto space-y-6 p-4">
-              <div className="max-w-2xl">
-              <div className="space-y-3">
-                <Label htmlFor="word-time">{t.wordDisplayTime}</Label>
-                <Input
-                  id="word-time"
-                  type="number"
-                  min="0.5"
-                  step="0.5"
-                  value={wordDisplayTime}
-                  onChange={(e) => setWordDisplayTime(parseFloat(e.target.value))}
-                  className="max-w-xs"
-                />
-              </div>
-
-              <div className="space-y-3">
-                <Label htmlFor="both-time">{t.bothDisplayTime}</Label>
-                <Input
-                  id="both-time"
-                  type="number"
-                  min="0.5"
-                  step="0.5"
-                  value={bothDisplayTime}
-                  onChange={(e) => setBothDisplayTime(parseFloat(e.target.value))}
-                  className="max-w-xs"
-                />
-              </div>
-
-              <div className="pt-4 border-t">
-                <h3 className="text-sm font-semibold mb-2">{t.instructions}</h3>
-                <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-                  {t.instructionsList.map((instruction, index) => (
-                    <li key={index}>{instruction}</li>
-                  ))}
-                </ul>
-              </div>
-              </div>
-            </TabsContent>
-
-            {/* Code Editor Tab */}
-            <TabsContent value="code" className="flex-1 flex flex-col space-y-4 min-h-0 p-4 overflow-y-auto">
-              <div className="flex-1 border border-border rounded overflow-hidden" style={{ minHeight: '600px' }}>
-                <Editor
-                  height="100%"
-                  defaultLanguage="javascript"
-                  value={editorValue}
-                  onChange={handleEditorChange}
-                  theme="vs-dark"
-                  options={{
-                    minimap: { enabled: false },
-                    fontSize: 14,
-                    lineNumbers: "on",
-                    scrollBeyondLastLine: false,
-                    automaticLayout: true,
-                    tabSize: 2,
-                    wordWrap: "on",
-                  }}
-                />
-              </div>
-
-              {/* Error Display */}
-              {error && (
-                <div className="bg-destructive/20 border border-destructive p-3 rounded">
-                  <p className="text-sm text-destructive-foreground font-semibold mb-1">
-                    ERROR
-                  </p>
-                  <p className="text-sm text-destructive-foreground font-mono">
-                    {error}
-                  </p>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex gap-3">
+                {/* Load Button */}
                 <Button
-                  onClick={handleSave}
-                  variant="default"
-                  className="flex-1"
-                  disabled={!hasUnsavedChanges}
+                  onClick={onLoadVocabulary}
+                  className="w-full"
+                  size="lg"
                 >
-                  <Save className="h-4 w-4 mr-2" />
-                  Save Changes
-                </Button>
-                <Button onClick={handleTest} variant="outline" className="flex-1">
-                  {t.testCode}
-                </Button>
-                <Button onClick={handleReset} variant="outline" className="flex-1">
-                  {t.resetToDefault}
+                  {t.loadVocabulary}
                 </Button>
               </div>
 
-              {/* Instructions */}
-              <div className="space-y-2 pt-4 border-t">
-                <h3 className="text-sm font-semibold">
-                  {t.postProcessingInstructions}
-                </h3>
-                <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
-                  {t.postProcessingInstructionsList.map((instruction, index) => (
-                    <li key={index}>{instruction}</li>
-                  ))}
-                </ul>
-                <div className="mt-3 p-3 bg-muted rounded">
-                  <p className="text-sm font-semibold mb-1">tshet-uinh Library</p>
-                  <p className="text-xs text-muted-foreground mb-2">
-                    The tshet-uinh library is pre-loaded and available as{" "}
-                    <code className="bg-black/20 px-1 py-0.5 rounded">
-                      TshetUinh
-                    </code>
-                  </p>
-                  <code className="text-xs bg-black/20 px-2 py-1 rounded block">
-                    const 音韻地位 = TshetUinh.音韻地位.from描述('羣開三A支平');
-                  </code>
+              {/* Right Column */}
+              <div className="space-y-6">
+                {/* Timing Settings */}
+                <div className="space-y-4">
+                  <h3 className="text-base font-semibold">Timing Settings</h3>
+                  
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="word-time" className="text-sm">
+                        {t.wordDisplayTime}
+                      </Label>
+                      <Input
+                        id="word-time"
+                        type="number"
+                        min="0.5"
+                        step="0.5"
+                        value={wordDisplayTime}
+                        onChange={(e) => setWordDisplayTime(parseFloat(e.target.value))}
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="both-time" className="text-sm">
+                        {t.bothDisplayTime}
+                      </Label>
+                      <Input
+                        id="both-time"
+                        type="number"
+                        min="0.5"
+                        step="0.5"
+                        value={bothDisplayTime}
+                        onChange={(e) => setBothDisplayTime(parseFloat(e.target.value))}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Swap Setting */}
+                <div className="flex items-center justify-between p-4 border rounded">
+                  <div className="space-y-1">
+                    <Label htmlFor="swap-toggle" className="text-base font-semibold cursor-pointer">
+                      {t.swapWordTranslation}
+                    </Label>
+                    <p className="text-sm text-muted-foreground">
+                      {t.swapWordTranslationHint}
+                    </p>
+                  </div>
+                  <Switch
+                    id="swap-toggle"
+                    checked={swapWordTranslation}
+                    onCheckedChange={setSwapWordTranslation}
+                  />
+                </div>
+
+                {/* Instructions */}
+                <div className="p-4 bg-muted/50 rounded space-y-2">
+                  <h4 className="text-sm font-semibold">{t.instructions}</h4>
+                  <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+                    <li>Press <kbd className="px-1 py-0.5 bg-background border rounded text-xs">S</kbd> to open settings</li>
+                    <li>Press <kbd className="px-1 py-0.5 bg-background border rounded text-xs">ESC</kbd> to close dialogs</li>
+                  </ul>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
-        </DialogContent>
-      </Dialog>
+            </div>
+          </TabsContent>
 
-      {/* Test Result Dialog */}
-      <Dialog open={!!testResult} onOpenChange={() => setTestResult(null)}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Test Successful</DialogTitle>
-            <DialogDescription>
-              Your code executed successfully with the test data.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <p className="text-sm font-semibold mb-2">Input:</p>
-              <pre className="bg-muted p-3 rounded text-xs overflow-auto">
-                {testResult?.input}
-              </pre>
+          {/* Code Editor Tab */}
+          <TabsContent value="code" className="flex-1 overflow-y-auto p-6 space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold">Post-Processing Code</h3>
+                <p className="text-sm text-muted-foreground">
+                  Write JavaScript to transform flashcard content
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Button onClick={handleResetCode} variant="outline" size="sm">
+                  Reset to Default
+                </Button>
+                <Button onClick={handleTestCode} variant="outline" size="sm">
+                  Test Code
+                </Button>
+                <Button
+                  onClick={handleSaveCode}
+                  disabled={!hasUnsavedChanges}
+                  size="sm"
+                >
+                  {hasUnsavedChanges ? "Save Changes *" : "Saved"}
+                </Button>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-semibold mb-2">Output:</p>
-              <pre className="bg-muted p-3 rounded text-xs overflow-auto">
-                {testResult?.output}
-              </pre>
+
+            <div className="border rounded overflow-hidden">
+              <Editor
+                height="600px"
+                defaultLanguage="javascript"
+                value={editorCode}
+                onChange={handleEditorChange}
+                theme="vs-dark"
+                options={{
+                  minimap: { enabled: false },
+                  fontSize: 14,
+                  lineNumbers: "on",
+                  scrollBeyondLastLine: false,
+                  automaticLayout: true,
+                }}
+              />
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
+
+            {/* Test Result Dialog */}
+            {showTestResult && (
+              <div className="p-4 border rounded bg-muted/50">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="text-sm font-semibold">Test Result</h4>
+                  <Button
+                    onClick={() => setShowTestResult(false)}
+                    variant="ghost"
+                    size="sm"
+                  >
+                    Close
+                  </Button>
+                </div>
+                <pre className="text-xs bg-background p-3 rounded overflow-x-auto">
+                  {testResult}
+                </pre>
+              </div>
+            )}
+
+            {/* Library Documentation */}
+            <div className="p-4 bg-muted/50 rounded space-y-3">
+              <h4 className="text-sm font-semibold">Pre-loaded Libraries</h4>
+              <div className="text-sm text-muted-foreground space-y-2">
+                <p>
+                  <code className="px-1.5 py-0.5 bg-background rounded text-xs">TshetUinh</code> - 
+                  Core library for Middle Chinese phonology
+                </p>
+                <p>
+                  <code className="px-1.5 py-0.5 bg-background rounded text-xs">TshetUinhDeriverTools</code> - 
+                  Derivation tools for phonological analysis
+                </p>
+                <p>
+                  <code className="px-1.5 py-0.5 bg-background rounded text-xs">TshetUinhExamples</code> - 
+                  Example derivers including Baxter transcription
+                </p>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </DialogContent>
+    </Dialog>
   );
 }
