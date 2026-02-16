@@ -1,6 +1,6 @@
 interface FlashcardDisplayProps {
-  word: string;
-  translation: string;
+  word?: string;
+  translation?: string;
   wordHtml?: string;
   translationHtml?: string;
   displayState: "word" | "both";

@@ -6,27 +6,28 @@ import { Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import * as TshetUinh from "tshet-uinh";
+import * as TshetUinhDeriverTools from "tshet-uinh-deriver-tools";
 
 interface FlashcardPair {
-  word: string;
-  translation: string;
+  word?: string;
+  translation?: string;
   wordHtml?: string;
   translationHtml?: string;
 }
 
 const DEFAULT_POST_PROCESSING = `// Post-processing function
 // Receives: { word, translation }
-// Returns: { word, translation } OR { word, translation, wordHtml?, translationHtml? }
-// Note: tshet-uinh library is pre-loaded and available as TshetUinh
+// Returns: { word?, translation?, wordHtml?, translationHtml? }
+// Note: If wordHtml/translationHtml is provided, word/translation becomes optional
+// Note: tshet-uinh and tshet-uinh-deriver-tools libraries are pre-loaded
+// Available as: TshetUinh, TshetUinhDeriverTools
 
 function process({ word, translation }) {
   // Example 1: Plain text transformation
   // return { word: word.toUpperCase(), translation: translation.toUpperCase() };
   
-  // Example 2: HTML string transformation (for rich formatting)
+  // Example 2: HTML-only return (word/translation optional when HTML provided)
   // return { 
-  //   word, 
-  //   translation,
   //   wordHtml: '<span style="color: red;">' + word + '</span>',
   //   translationHtml: '<span style="font-size: 2em;">' + translation + '</span>'
   // };
@@ -76,7 +77,7 @@ export default function Home() {
           }
           return null;
         })
-        .filter((pair): pair is FlashcardPair => pair !== null);
+        .filter((pair): pair is NonNullable<typeof pair> => pair !== null);
 
       if (pairs.length === 0) {
         throw new Error("No valid flashcard pairs found");
@@ -103,25 +104,29 @@ export default function Home() {
 
     // Apply post-processing
     try {
-      // Make TshetUinh available in eval context
+      // Make TshetUinh and TshetUinhDeriverTools available in eval context
       // eslint-disable-next-line no-eval
       const processedPair = (function () {
         const func = eval(`(${postProcessingCode})`);
-        return func.call({ TshetUinh }, pair);
+        return func.call({ TshetUinh, TshetUinhDeriverTools }, pair);
       })();
       if (processedPair) {
         // Support both plain string and HTML string returns
-        const result: FlashcardPair = {
-          word: typeof processedPair.word === "string" ? processedPair.word : pair.word,
-          translation: typeof processedPair.translation === "string" ? processedPair.translation : pair.translation,
-        };
+        const result: FlashcardPair = {};
         
-        // If wordHtml or translationHtml is provided, use it
+        // If HTML is provided, use it (word/translation become optional)
         if (typeof processedPair.wordHtml === "string") {
           result.wordHtml = processedPair.wordHtml;
+          result.word = typeof processedPair.word === "string" ? processedPair.word : pair.word;
+        } else {
+          result.word = typeof processedPair.word === "string" ? processedPair.word : pair.word;
         }
+        
         if (typeof processedPair.translationHtml === "string") {
           result.translationHtml = processedPair.translationHtml;
+          result.translation = typeof processedPair.translation === "string" ? processedPair.translation : pair.translation;
+        } else {
+          result.translation = typeof processedPair.translation === "string" ? processedPair.translation : pair.translation;
         }
         
         return result;

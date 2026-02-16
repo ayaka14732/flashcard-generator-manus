@@ -34,17 +34,17 @@ interface UnifiedSettingsDialogProps {
 
 const DEFAULT_CODE = `// Post-processing function
 // Receives: { word, translation }
-// Returns: { word, translation } OR { word, translation, wordHtml?, translationHtml? }
-// Note: tshet-uinh library is pre-loaded and available as TshetUinh
+// Returns: { word?, translation?, wordHtml?, translationHtml? }
+// Note: If wordHtml/translationHtml is provided, word/translation becomes optional
+// Note: tshet-uinh and tshet-uinh-deriver-tools libraries are pre-loaded
+// Available as: TshetUinh, TshetUinhDeriverTools
 
 function process({ word, translation }) {
   // Example 1: Plain text transformation
   // return { word: word.toUpperCase(), translation: translation.toUpperCase() };
   
-  // Example 2: HTML string transformation (for rich formatting)
+  // Example 2: HTML-only return (word/translation optional when HTML provided)
   // return { 
-  //   word, 
-  //   translation,
   //   wordHtml: '<span style="color: red;">' + word + '</span>',
   //   translationHtml: '<span style="font-size: 2em;">' + translation + '</span>'
   // };
@@ -210,6 +210,7 @@ export default function UnifiedSettingsDialog({
                   step="0.5"
                   value={wordDisplayTime}
                   onChange={(e) => setWordDisplayTime(parseFloat(e.target.value))}
+                  className="max-w-xs"
                 />
               </div>
 
@@ -222,6 +223,7 @@ export default function UnifiedSettingsDialog({
                   step="0.5"
                   value={bothDisplayTime}
                   onChange={(e) => setBothDisplayTime(parseFloat(e.target.value))}
+                  className="max-w-xs"
                 />
               </div>
 

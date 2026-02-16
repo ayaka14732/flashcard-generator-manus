@@ -166,6 +166,9 @@ importers:
       tshet-uinh:
         specifier: ^0.15.4
         version: 0.15.4
+      tshet-uinh-deriver-tools:
+        specifier: ^0.2.0
+        version: 0.2.0(tshet-uinh@0.15.4)
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.1(@types/react@19.2.1))(@types/react@19.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -3296,6 +3299,11 @@ packages:
   ts-dedent@2.2.0:
     resolution: {integrity: sha512-q5W7tVM71e2xjHZTlgfTDoPF/SmqKG5hddq9SzR49CH2hayqRKJtQ4mtRlSxKaJlR/+9rEM+mnBHf7I2/BQcpQ==}
     engines: {node: '>=6.10'}
+
+  tshet-uinh-deriver-tools@0.2.0:
+    resolution: {integrity: sha512-r4MKw5fmezav00yGDzJkvfwvGnoKPPMmgjJtICFzKSULqUgKLaQQOGieor2Ts48NKcR+0sqOmW3ne2gTjVJa5w==}
+    peerDependencies:
+      tshet-uinh: ^0.15.0
 
   tshet-uinh@0.15.4:
     resolution: {integrity: sha512-Bz93oMaSAkMp7pA6kKeBG3s860r9wbUPG1K/brkSkL01GQUK8okKVZcm0ZOVXCdBCWJXz00CXq+jm2IcYlfdkA==}
@@ -6980,6 +6988,10 @@ snapshots:
   trough@2.2.0: {}
 
   ts-dedent@2.2.0: {}
+
+  tshet-uinh-deriver-tools@0.2.0(tshet-uinh@0.15.4):
+    dependencies:
+      tshet-uinh: 0.15.4
 
   tshet-uinh@0.15.4: {}
 
