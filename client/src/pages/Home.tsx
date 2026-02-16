@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import * as TshetUinh from "tshet-uinh";
 import * as TshetUinhDeriverTools from "tshet-uinh-deriver-tools";
+import * as TshetUinhExamples from "tshet-uinh-examples";
 
 interface FlashcardPair {
   word?: string;
@@ -19,8 +20,7 @@ const DEFAULT_POST_PROCESSING = `// Post-processing function
 // Receives: { word, translation }
 // Returns: { word?, translation?, wordHtml?, translationHtml? }
 // Note: If wordHtml/translationHtml is provided, word/translation becomes optional
-// Note: tshet-uinh and tshet-uinh-deriver-tools libraries are pre-loaded
-// Available as: TshetUinh, TshetUinhDeriverTools
+// Pre-loaded libraries: TshetUinh, TshetUinhDeriverTools, TshetUinhExamples
 
 function process({ word, translation }) {
   // Example 1: Plain text transformation
@@ -35,6 +35,11 @@ function process({ word, translation }) {
   // Example 3: Use tshet-uinh library
   // const 音韻地位 = TshetUinh.音韻地位.from描述('羣開三A支平');
   // return { word: 音韻地位.描述, translation: translation };
+  
+  // Example 4: Use tshet-uinh-examples for Baxter transcription
+  // const 音韻地位 = TshetUinh.音韻地位.from描述(translation);
+  // const 推導白一平轉寫 = TshetUinhExamples.baxter({ 版本: "1992" });
+  // return { word, translation: 推導白一平轉寫(音韻地位) };
   
   // Default: no transformation
   return { word, translation };
@@ -104,11 +109,11 @@ export default function Home() {
 
     // Apply post-processing
     try {
-      // Make TshetUinh and TshetUinhDeriverTools available in eval context
+      // Make TshetUinh, TshetUinhDeriverTools, and TshetUinhExamples available in eval context
       // eslint-disable-next-line no-eval
       const processedPair = (function () {
         const func = eval(`(${postProcessingCode})`);
-        return func.call({ TshetUinh, TshetUinhDeriverTools }, pair);
+        return func.call({ TshetUinh, TshetUinhDeriverTools, TshetUinhExamples }, pair);
       })();
       if (processedPair) {
         // Support both plain string and HTML string returns

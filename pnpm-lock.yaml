@@ -169,6 +169,9 @@ importers:
       tshet-uinh-deriver-tools:
         specifier: ^0.2.0
         version: 0.2.0(tshet-uinh@0.15.4)
+      tshet-uinh-examples:
+        specifier: ^20260216.0.0
+        version: 20260216.0.0
       vaul:
         specifier: ^1.1.2
         version: 1.1.2(@types/react-dom@19.2.1(@types/react@19.2.1))(@types/react@19.2.1)(react-dom@19.2.1(react@19.2.1))(react@19.2.1)
@@ -3304,6 +3307,9 @@ packages:
     resolution: {integrity: sha512-r4MKw5fmezav00yGDzJkvfwvGnoKPPMmgjJtICFzKSULqUgKLaQQOGieor2Ts48NKcR+0sqOmW3ne2gTjVJa5w==}
     peerDependencies:
       tshet-uinh: ^0.15.0
+
+  tshet-uinh-examples@20260216.0.0:
+    resolution: {integrity: sha512-XWk7h+JjvIBf3py8eqpsZNr2mbMGlXPCrSxw+MKmrqPEQGhu8QcBjD/CWCr02bdKKfGcpIPGRt8MDOGxaur+cQ==}
 
   tshet-uinh@0.15.4:
     resolution: {integrity: sha512-Bz93oMaSAkMp7pA6kKeBG3s860r9wbUPG1K/brkSkL01GQUK8okKVZcm0ZOVXCdBCWJXz00CXq+jm2IcYlfdkA==}
@@ -6992,6 +6998,11 @@ snapshots:
   tshet-uinh-deriver-tools@0.2.0(tshet-uinh@0.15.4):
     dependencies:
       tshet-uinh: 0.15.4
+
+  tshet-uinh-examples@20260216.0.0:
+    dependencies:
+      tshet-uinh: 0.15.4
+      tshet-uinh-deriver-tools: 0.2.0(tshet-uinh@0.15.4)
 
   tshet-uinh@0.15.4: {}
 
