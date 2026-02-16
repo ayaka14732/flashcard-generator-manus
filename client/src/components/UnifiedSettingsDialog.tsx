@@ -129,7 +129,7 @@ export default function UnifiedSettingsDialog({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-[1400px] w-[98vw] h-[98vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-[1600px] w-[98vw] max-h-[95vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-2xl">{t.configuration}</DialogTitle>
             <DialogDescription>
