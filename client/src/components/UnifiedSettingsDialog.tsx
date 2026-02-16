@@ -129,7 +129,7 @@ export default function UnifiedSettingsDialog({
   return (
     <>
       <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+        <DialogContent className="max-w-6xl w-[95vw] max-h-[95vh] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle className="text-2xl">{t.configuration}</DialogTitle>
             <DialogDescription>
@@ -171,7 +171,7 @@ export default function UnifiedSettingsDialog({
                   {t.vocabularyUrlHint}
                 </p>
                 <Button onClick={onLoadVocabulary} className="w-full">
-                  {t.loadVocabulary}
+                  Load Vocabulary
                 </Button>
               </div>
 

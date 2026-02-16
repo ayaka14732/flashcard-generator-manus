@@ -36,7 +36,7 @@ export default function Home() {
   const { t } = useI18n();
 
   // Settings state
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(true);
   const [vocabularyUrl, setVocabularyUrl] = useState(
     "https://raw.githubusercontent.com/nk2028/tshet-uinh-flashcard/refs/heads/main/public/data/data_small.tsv"
   );
@@ -185,30 +185,12 @@ export default function Home() {
       )}
 
       {/* Flashcard Display */}
-      {isPlaying && currentPair ? (
+      {isPlaying && currentPair && (
         <FlashcardDisplay
           word={currentPair.word}
           translation={currentPair.translation}
           displayState={displayState}
         />
-      ) : (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center space-y-6">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl text-white mb-4 font-bold">
-              FLASHCARD GENERATOR
-            </h1>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-              {t.welcomeSubtitle}
-            </p>
-            <Button
-              onClick={() => setSettingsOpen(true)}
-              size="lg"
-              className="h-12 px-8"
-            >
-              {t.openSettings}
-            </Button>
-          </div>
-        </div>
       )}
 
       {/* Unified Settings Dialog */}
