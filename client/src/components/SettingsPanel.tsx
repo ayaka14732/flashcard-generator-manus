@@ -11,6 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { useI18n } from "@/contexts/I18nContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { X } from "lucide-react";
 
 interface SettingsPanelProps {
@@ -40,6 +42,8 @@ export default function SettingsPanel({
   setSwapWordTranslation,
   onLoadVocabulary,
 }: SettingsPanelProps) {
+  const { t } = useI18n();
+
   if (!isOpen) return null;
 
   return (
@@ -56,7 +60,7 @@ export default function SettingsPanel({
           {/* Header */}
           <div className="flex items-center justify-between mb-8 pb-4 border-b-2 border-border">
             <h2 className="font-mono text-xl font-medium tracking-tight">
-              CONFIGURATION
+              {t.configuration}
             </h2>
             <Button
               variant="ghost"
@@ -68,27 +72,32 @@ export default function SettingsPanel({
             </Button>
           </div>
 
+          {/* Language Switcher */}
+          <div className="mb-6 pb-6 border-b-2 border-border">
+            <LanguageSwitcher />
+          </div>
+
           {/* Vocabulary URL */}
           <div className="space-y-3 mb-6">
             <Label htmlFor="vocab-url" className="font-mono text-sm font-medium">
-              VOCABULARY URL
+              {t.vocabularyUrl}
             </Label>
             <Input
               id="vocab-url"
               type="url"
               value={vocabularyUrl}
               onChange={(e) => setVocabularyUrl(e.target.value)}
-              placeholder="https://example.com/vocab.txt"
+              placeholder={t.vocabularyUrlPlaceholder}
               className="font-mono text-sm h-10"
             />
             <p className="font-mono text-xs text-muted-foreground">
-              Format: translation\tword (tab-separated, one per line)
+              {t.vocabularyUrlHint}
             </p>
             <Button
               onClick={onLoadVocabulary}
               className="w-full font-mono text-sm h-10"
             >
-              LOAD VOCABULARY
+              {t.loadVocabulary}
             </Button>
           </div>
 
@@ -96,7 +105,7 @@ export default function SettingsPanel({
           <div className="space-y-6 mb-6 pb-6 border-b-2 border-border">
             <div className="space-y-3">
               <Label htmlFor="word-time" className="font-mono text-sm font-medium">
-                WORD DISPLAY TIME (seconds)
+                {t.wordDisplayTime}
               </Label>
               <Input
                 id="word-time"
@@ -111,7 +120,7 @@ export default function SettingsPanel({
 
             <div className="space-y-3">
               <Label htmlFor="both-time" className="font-mono text-sm font-medium">
-                BOTH DISPLAY TIME (seconds)
+                {t.bothDisplayTime}
               </Label>
               <Input
                 id="both-time"
@@ -129,10 +138,10 @@ export default function SettingsPanel({
           <div className="flex items-center justify-between mb-6 pb-6 border-b-2 border-border">
             <div className="space-y-1">
               <Label htmlFor="swap" className="font-mono text-sm font-medium">
-                SWAP WORD & TRANSLATION
+                {t.swapWordTranslation}
               </Label>
               <p className="font-mono text-xs text-muted-foreground">
-                Display translation first, then word
+                {t.swapWordTranslationHint}
               </p>
             </div>
             <Switch
@@ -144,13 +153,11 @@ export default function SettingsPanel({
 
           {/* Instructions */}
           <div className="space-y-2">
-            <h3 className="font-mono text-sm font-medium">INSTRUCTIONS</h3>
+            <h3 className="font-mono text-sm font-medium">{t.instructions}</h3>
             <ul className="font-mono text-xs text-muted-foreground space-y-1 list-disc list-inside">
-              <li>Provide a URL to a vocabulary file</li>
-              <li>File format: translation\tword (tab-separated)</li>
-              <li>Adjust display timing as needed</li>
-              <li>Use post-processing for custom transformations</li>
-              <li>Press ESC to close settings</li>
+              {t.instructionsList.map((instruction, index) => (
+                <li key={index}>{instruction}</li>
+              ))}
             </ul>
           </div>
         </div>

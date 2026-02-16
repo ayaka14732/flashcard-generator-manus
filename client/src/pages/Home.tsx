@@ -11,6 +11,7 @@ import FlashcardDisplay from "@/components/FlashcardDisplay";
 import PostProcessingPanel from "@/components/PostProcessingPanel";
 import SettingsPanel from "@/components/SettingsPanel";
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/contexts/I18nContext";
 import { Code, Settings } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -36,8 +37,10 @@ function process({ word, translation }) {
 }`;
 
 export default function Home() {
+  const { t } = useI18n();
+
   // Settings state
-  const [vocabularyUrl, setVocabularyUrl] = useState("https://files.manuscdn.com/user_upload_by_module/session_file/310519663323892428/HBgHuOeOJYodGIQm.txt");
+  const [vocabularyUrl, setVocabularyUrl] = useState("https://raw.githubusercontent.com/nk2028/tshet-uinh-flashcard/refs/heads/main/public/data/data_small.tsv");
   const [wordDisplayTime, setWordDisplayTime] = useState(2);
   const [bothDisplayTime, setBothDisplayTime] = useState(1);
   const [swapWordTranslation, setSwapWordTranslation] = useState(false);
@@ -55,7 +58,7 @@ export default function Home() {
   // Load vocabulary from URL
   const loadVocabulary = async () => {
     if (!vocabularyUrl) {
-      toast.error("Please provide a vocabulary URL");
+      toast.error(t.toastNoUrl);
       return;
     }
 
@@ -82,9 +85,9 @@ export default function Home() {
       setCurrentIndex(0);
       setIsPlaying(true);
       setSettingsOpen(false);
-      toast.success(`Loaded ${pairs.length} flashcards`);
+      toast.success(t.toastLoadSuccess.replace("{count}", pairs.length.toString()));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to load vocabulary");
+      toast.error(error instanceof Error ? error.message : t.toastLoadError);
     }
   };
 
@@ -124,7 +127,7 @@ export default function Home() {
     } else {
       // Loop back to start
       setCurrentIndex(0);
-      toast.success("Completed all flashcards! Starting over...");
+      toast.success(t.toastCompleted);
     }
   };
 
@@ -176,17 +179,17 @@ export default function Home() {
           {/* Welcome Message */}
           <div className="relative z-10 text-center space-y-6">
             <h1 className="font-display text-5xl md:text-6xl lg:text-7xl text-white mb-4">
-              FLASHCARD GENERATOR
+              {t.welcomeTitle}
             </h1>
             <p className="font-mono text-lg text-muted-foreground max-w-2xl mx-auto px-4">
-              Load your vocabulary file to begin. Press S for settings or E for post-processing.
+              {t.welcomeSubtitle}
             </p>
             <Button
               onClick={() => setSettingsOpen(true)}
               size="lg"
               className="font-mono text-sm h-12 px-8"
             >
-              OPEN SETTINGS
+              {t.openSettings}
             </Button>
           </div>
         </div>
@@ -199,7 +202,7 @@ export default function Home() {
           size="icon"
           onClick={() => setSettingsOpen(true)}
           className="h-12 w-12 bg-card/90 backdrop-blur"
-          title="Settings (S)"
+          title={t.settings}
         >
           <Settings className="h-5 w-5" />
         </Button>
@@ -208,7 +211,7 @@ export default function Home() {
           size="icon"
           onClick={() => setPostProcessingOpen(true)}
           className="h-12 w-12 bg-card/90 backdrop-blur"
-          title="Post-Processing (E)"
+          title={t.postProcessingButton}
         >
           <Code className="h-5 w-5" />
         </Button>
@@ -219,7 +222,9 @@ export default function Home() {
         <div className="fixed top-6 left-6 z-30">
           <div className="bg-card/90 backdrop-blur border-2 border-border px-4 py-2">
             <p className="font-mono text-sm">
-              {currentIndex + 1} / {flashcards.length}
+              {t.progressFormat
+                .replace("{current}", (currentIndex + 1).toString())
+                .replace("{total}", flashcards.length.toString())}
             </p>
           </div>
         </div>

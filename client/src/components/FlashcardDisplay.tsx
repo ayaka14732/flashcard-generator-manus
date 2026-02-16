@@ -38,10 +38,7 @@ export default function FlashcardDisplay({
     }, wordDisplayTime * 1000);
 
     const bothTimer = setTimeout(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        onComplete();
-      }, 300);
+      onComplete();
     }, (wordDisplayTime + bothDisplayTime) * 1000);
 
     return () => {
@@ -61,16 +58,11 @@ export default function FlashcardDisplay({
             linear-gradient(to bottom, oklch(0.3 0.1 210) 1px, transparent 1px)
           `,
           backgroundSize: "40px 40px",
-          animation: "gridPulse 2s ease-in-out infinite",
         }}
       />
 
       {/* Flashcard Content */}
-      <div
-        className={`relative z-10 text-center transition-all duration-300 ${
-          isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
-        }`}
-      >
+      <div className="relative z-10 text-center">
         {/* Word */}
         <div
           className="font-display text-6xl md:text-7xl lg:text-8xl text-white mb-8"
@@ -81,10 +73,8 @@ export default function FlashcardDisplay({
 
         {/* Translation */}
         <div
-          className={`font-display text-4xl md:text-5xl lg:text-6xl transition-all duration-200 ${
-            displayState === "both"
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-2"
+          className={`font-display text-4xl md:text-5xl lg:text-6xl ${
+            displayState === "both" ? "opacity-100" : "opacity-0"
           }`}
           style={{
             color: "oklch(0.7 0.1 210)",
@@ -95,12 +85,7 @@ export default function FlashcardDisplay({
         </div>
       </div>
 
-      <style>{`
-        @keyframes gridPulse {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.4; }
-        }
-      `}</style>
+
     </div>
   );
 }

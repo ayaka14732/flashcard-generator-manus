@@ -8,6 +8,7 @@
  */
 
 import { Button } from "@/components/ui/button";
+import { useI18n } from "@/contexts/I18nContext";
 import { X } from "lucide-react";
 import { useState } from "react";
 
@@ -39,6 +40,7 @@ export default function PostProcessingPanel({
   code,
   setCode,
 }: PostProcessingPanelProps) {
+  const { t } = useI18n();
   const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
@@ -51,10 +53,13 @@ export default function PostProcessingPanel({
       const result = eval(`(${code})({ word: "${testData.word}", translation: "${testData.translation}" })`);
       
       if (!result || typeof result.word !== "string" || typeof result.translation !== "string") {
-        setError("Function must return { word: string, translation: string }");
+        setError(t.toastTestError);
       } else {
         setError(null);
-        alert(`Test successful!\nInput: ${JSON.stringify(testData)}\nOutput: ${JSON.stringify(result)}`);
+        const message = t.toastTestSuccess
+          .replace("{input}", JSON.stringify(testData))
+          .replace("{output}", JSON.stringify(result));
+        alert(message);
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : "Invalid code");
@@ -80,7 +85,7 @@ export default function PostProcessingPanel({
           {/* Header */}
           <div className="flex items-center justify-between mb-6 pb-4 border-b-2 border-border">
             <h2 className="font-mono text-xl font-medium tracking-tight">
-              POST-PROCESSING
+              {t.postProcessing}
             </h2>
             <Button
               variant="ghost"
@@ -126,26 +131,24 @@ export default function PostProcessingPanel({
                 variant="outline"
                 className="flex-1 font-mono text-sm h-10"
               >
-                TEST CODE
+                {t.testCode}
               </Button>
               <Button
                 onClick={handleReset}
                 variant="outline"
                 className="flex-1 font-mono text-sm h-10"
               >
-                RESET TO DEFAULT
+                {t.resetToDefault}
               </Button>
             </div>
 
             {/* Instructions */}
             <div className="space-y-2 pt-4 border-t-2 border-border">
-              <h3 className="font-mono text-sm font-medium">INSTRUCTIONS</h3>
+              <h3 className="font-mono text-sm font-medium">{t.postProcessingInstructions}</h3>
               <ul className="font-mono text-xs text-muted-foreground space-y-1 list-disc list-inside">
-                <li>Write a function that transforms word/translation pairs</li>
-                <li>Function receives: {"{ word, translation }"}</li>
-                <li>Function must return: {"{ word, translation }"}</li>
-                <li>Test your code before closing the panel</li>
-                <li>Changes apply to all flashcards</li>
+                {t.postProcessingInstructionsList.map((instruction, index) => (
+                  <li key={index}>{instruction}</li>
+                ))}
               </ul>
             </div>
           </div>
