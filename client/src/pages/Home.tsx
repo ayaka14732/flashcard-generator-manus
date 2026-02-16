@@ -25,6 +25,7 @@ interface FlashcardPair {
 const DEFAULT_POST_PROCESSING = `// Post-processing function
 // Receives: { word, translation }
 // Returns: { word, translation }
+// Note: tshet-uinh library is pre-loaded and available as TshetUinh
 
 function process({ word, translation }) {
   // Example: Convert to uppercase
@@ -32,6 +33,10 @@ function process({ word, translation }) {
   
   // Example: Add prefix
   // return { word: "→ " + word, translation: "← " + translation };
+  
+  // Example: Use tshet-uinh library
+  // const 音韻地位 = TshetUinh.音韻地位.from描述('羣開三A支平');
+  // return { word: 音韻地位.描述, translation: translation };
   
   // Default: no transformation
   return { word, translation };
