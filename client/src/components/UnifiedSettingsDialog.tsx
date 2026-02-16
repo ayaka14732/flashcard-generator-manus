@@ -228,7 +228,7 @@ export default function UnifiedSettingsDialog({
             </TabsContent>
 
             {/* Code Editor Tab */}
-            <TabsContent value="code" className="flex-1 flex flex-col space-y-4 min-h-0 p-4">
+            <TabsContent value="code" className="flex-1 flex flex-col space-y-4 min-h-0 p-4 overflow-y-auto">
               <div className="flex-1 border border-border rounded overflow-hidden" style={{ minHeight: '600px' }}>
                 <Editor
                   height="100%"
