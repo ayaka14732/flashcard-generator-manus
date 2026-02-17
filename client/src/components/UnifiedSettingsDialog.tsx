@@ -180,8 +180,8 @@ export default function UnifiedSettingsDialog({
                       <Input
                         id="word-time"
                         type="number"
-                        min="0.5"
-                        step="0.5"
+                        min="0.1"
+                        step="0.1"
                         value={wordDisplayTime}
                         onChange={(e) => setWordDisplayTime(parseFloat(e.target.value))}
                       />
@@ -194,8 +194,8 @@ export default function UnifiedSettingsDialog({
                       <Input
                         id="both-time"
                         type="number"
-                        min="0.5"
-                        step="0.5"
+                        min="0.1"
+                        step="0.1"
                         value={bothDisplayTime}
                         onChange={(e) => setBothDisplayTime(parseFloat(e.target.value))}
                       />

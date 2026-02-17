@@ -32,11 +32,11 @@ export default function FlashcardDisplay({
         {/* Word */}
         {wordHtml ? (
           <div
-            className="text-6xl md:text-7xl lg:text-8xl text-white mb-8 font-bold"
+            className="text-6xl md:text-7xl lg:text-8xl text-white mb-16"
             dangerouslySetInnerHTML={{ __html: wordHtml }}
           />
         ) : (
-          <div className="text-6xl md:text-7xl lg:text-8xl text-white mb-8 font-bold">
+          <div className="text-6xl md:text-7xl lg:text-8xl text-white mb-16">
             {word}
           </div>
         )}
@@ -44,7 +44,7 @@ export default function FlashcardDisplay({
         {/* Translation */}
         {translationHtml ? (
           <div
-            className={`text-4xl md:text-5xl lg:text-6xl ${
+            className={`text-5xl md:text-6xl lg:text-7xl ${
               displayState === "both" ? "opacity-100" : "opacity-0"
             }`}
             style={{
@@ -54,7 +54,7 @@ export default function FlashcardDisplay({
           />
         ) : (
           <div
-            className={`text-4xl md:text-5xl lg:text-6xl ${
+            className={`text-5xl md:text-6xl lg:text-7xl ${
               displayState === "both" ? "opacity-100" : "opacity-0"
             }`}
             style={{

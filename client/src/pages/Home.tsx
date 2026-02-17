@@ -53,7 +53,7 @@ export default function Home() {
   const [vocabularyUrl, setVocabularyUrl] = useState(
     "/sample_dict.tsv"
   );
-  const [wordDisplayTime, setWordDisplayTime] = useState(2);
+  const [wordDisplayTime, setWordDisplayTime] = useState(1.0);
   const [bothDisplayTime, setBothDisplayTime] = useState(1);
   const [swapWordTranslation, setSwapWordTranslation] = useState(false);
   const [postProcessingCode, setPostProcessingCode] = useState(
