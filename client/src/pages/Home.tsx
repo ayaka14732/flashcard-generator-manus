@@ -51,7 +51,7 @@ export default function Home() {
   // Settings state
   const [settingsOpen, setSettingsOpen] = useState(true);
   const [vocabularyUrl, setVocabularyUrl] = useState(
-    "https://raw.githubusercontent.com/nk2028/tshet-uinh-flashcard/refs/heads/main/public/data/data_small.tsv"
+    "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323892428/dXrOgaNzaDXBwRPX.tsv"
   );
   const [wordDisplayTime, setWordDisplayTime] = useState(2);
   const [bothDisplayTime, setBothDisplayTime] = useState(1);
