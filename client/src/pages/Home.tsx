@@ -88,7 +88,10 @@ export default function Home() {
         throw new Error("No valid flashcard pairs found");
       }
 
-      setFlashcards(pairs);
+      // Shuffle the pairs
+      const shuffled = [...pairs].sort(() => Math.random() - 0.5);
+
+      setFlashcards(shuffled);
       setCurrentIndex(0);
       setIsPlaying(true);
       setDisplayState("word");

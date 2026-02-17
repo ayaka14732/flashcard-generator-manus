@@ -72,7 +72,7 @@ const PRESET_TUPA = `function process({ word, translation }) {
   const word_1 = word.split(' ').map(p => {
     const 當前音韻地位 = TshetUinh.壓縮表示.decode音韻編碼(p);
     const res = tupa(當前音韻地位);
-    const style = 當前音韻地位.聲 === '上' ? "transform: rotate(-12deg); transform-origin: left center;" : 當前音韻地位.聲 === '去' ? "transform: rotate(12deg); transform-origin: left center;" : "";
+    const style = 當前音韻地位.聲 === '上' ? "transform: rotate(-8deg); transform-origin: left center;" : 當前音韻地位.聲 === '去' ? "transform: rotate(8deg); transform-origin: left center;" : "";
     return \`<span style="display: inline-block; \${style}">\${res}</span>\`;
   }).join(' ');
   return { wordHtml: word_1 , translation };
@@ -83,7 +83,7 @@ const PRESET_BAXTER = `function process({ word, translation }) {
   const word_1 = word.split(' ').map(p => {
     const 當前音韻地位 = TshetUinh.壓縮表示.decode音韻編碼(p);
     const res = baxter(當前音韻地位);
-    const style = 當前音韻地位.聲 === '上' ? "transform: rotate(-12deg); transform-origin: left center;" : 當前音韻地位.聲 === '去' ? "transform: rotate(12deg); transform-origin: left center;" : "";
+    const style = 當前音韻地位.聲 === '上' ? "transform: rotate(-8deg); transform-origin: left center;" : 當前音韻地位.聲 === '去' ? "transform: rotate(8deg); transform-origin: left center;" : "";
     return \`<span style="display: inline-block; \${style}">\${res}</span>\`;
   }).join(' ');
   return { wordHtml: word_1 , translation };
