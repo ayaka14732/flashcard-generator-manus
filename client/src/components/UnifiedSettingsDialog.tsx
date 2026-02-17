@@ -100,13 +100,13 @@ const PRESETS = {
     name: "切韻拼音 (Tupa)", 
     code: PRESET_TUPA,
     vocabularyUrl: "/sample_dict.tsv",
-    swap: true
+    swap: false
   },
   baxter: { 
     name: "白一平轉寫 (Baxter)", 
     code: PRESET_BAXTER,
     vocabularyUrl: "/sample_dict.tsv",
-    swap: true
+    swap: false
   },
 };
 
