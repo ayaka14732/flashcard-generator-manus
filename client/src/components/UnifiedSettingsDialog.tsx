@@ -90,9 +90,24 @@ const PRESET_BAXTER = `function process({ word, translation }) {
 }`;
 
 const PRESETS = {
-  default: { name: "Default (No transformation)", code: DEFAULT_CODE },
-  tupa: { name: "切韻拼音 (Tupa)", code: PRESET_TUPA },
-  baxter: { name: "白一平轉寫 (Baxter)", code: PRESET_BAXTER },
+  default: { 
+    name: "Default (No transformation)", 
+    code: DEFAULT_CODE,
+    vocabularyUrl: "/sample_dict.tsv",
+    swap: false
+  },
+  tupa: { 
+    name: "切韻拼音 (Tupa)", 
+    code: PRESET_TUPA,
+    vocabularyUrl: "/sample_dict.tsv",
+    swap: true
+  },
+  baxter: { 
+    name: "白一平轉寫 (Baxter)", 
+    code: PRESET_BAXTER,
+    vocabularyUrl: "/sample_dict.tsv",
+    swap: true
+  },
 };
 
 export default function UnifiedSettingsDialog({
@@ -148,7 +163,10 @@ export default function UnifiedSettingsDialog({
     const preset = PRESETS[presetKey as keyof typeof PRESETS];
     if (preset) {
       setEditorCode(preset.code);
+      setVocabularyUrl(preset.vocabularyUrl);
+      setSwapWordTranslation(preset.swap);
       setHasUnsavedChanges(true);
+      toast.success(`Preset loaded: ${preset.name}`);
     }
   };
 
