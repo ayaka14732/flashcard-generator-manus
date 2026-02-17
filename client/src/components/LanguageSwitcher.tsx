@@ -11,7 +11,7 @@ export default function LanguageSwitcher() {
         size="sm"
         onClick={() => setLanguage("en")}
       >
-        EN
+        English
       </Button>
       <Button
         variant={language === "zh" ? "default" : "outline"}

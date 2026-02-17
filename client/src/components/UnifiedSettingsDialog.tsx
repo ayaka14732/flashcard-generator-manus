@@ -156,7 +156,7 @@ export default function UnifiedSettingsDialog({
       setCode(preset.code);
       setVocabularyUrl(preset.vocabularyUrl);
       setSwapWordTranslation(preset.swap);
-      toast.success(`Preset loaded: ${preset.name}`);
+      toast.success(t.toastPresetLoaded.replace('{name}', preset.name));
     }
   };
 
@@ -170,7 +170,7 @@ export default function UnifiedSettingsDialog({
       <DialogContent className="!w-[90vw] !max-w-[1600px] !h-[90vh] max-h-[90vh] overflow-hidden flex flex-col">
         <DialogHeader>
           <div className="flex items-center justify-between">
-            <DialogTitle>Settings (S)</DialogTitle>
+            <DialogTitle>{t.settingsTitle}</DialogTitle>
             <button
               onClick={onClose}
               className="rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground"
@@ -194,14 +194,14 @@ export default function UnifiedSettingsDialog({
             </button>
           </div>
           <p className="text-sm text-muted-foreground">
-            Configure your flashcard experience
+            {t.settingsSubtitle}
           </p>
         </DialogHeader>
 
         <Tabs defaultValue="start" className="flex-1 flex flex-col overflow-hidden">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="start">Start</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+            <TabsTrigger value="start">{t.tabStart}</TabsTrigger>
+            <TabsTrigger value="settings">{t.tabSettings}</TabsTrigger>
           </TabsList>
 
           {/* Page 1: Start Page */}
@@ -209,11 +209,11 @@ export default function UnifiedSettingsDialog({
             {/* Preset Selector */}
             <div className="space-y-2">
               <Label htmlFor="preset-select" className="text-base font-semibold">
-                Load Preset Template
+                {t.loadPresetTemplate}
               </Label>
               <Select onValueChange={handlePresetChange}>
                 <SelectTrigger id="preset-select" className="max-w-md">
-                  <SelectValue placeholder="Select a preset template..." />
+                  <SelectValue placeholder={t.selectPresetPlaceholder} />
                 </SelectTrigger>
                 <SelectContent>
                   {Object.entries(PRESETS).map(([key, preset]) => (
@@ -228,7 +228,7 @@ export default function UnifiedSettingsDialog({
             {/* Vocabulary URL */}
             <div className="space-y-2">
               <Label htmlFor="vocab-url" className="text-base font-semibold">
-                Vocabulary URL
+                {t.vocabularyUrl}
               </Label>
               <Input
                 id="vocab-url"
@@ -239,7 +239,7 @@ export default function UnifiedSettingsDialog({
                 className="max-w-2xl"
               />
               <p className="text-sm text-muted-foreground">
-                Format: translation\tword (tab-separated, one per line)
+                {t.vocabularyUrlHint}
               </p>
             </div>
 
@@ -250,7 +250,7 @@ export default function UnifiedSettingsDialog({
                   {t.swapWordTranslation}
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Display translation first, then word
+                  {t.swapWordTranslationHint}
                 </p>
               </div>
               <Switch
@@ -263,7 +263,7 @@ export default function UnifiedSettingsDialog({
             {/* Code Editor */}
             <div className="space-y-2">
               <Label className="text-base font-semibold">
-                Post-processing Code
+                {t.postProcessingCode}
               </Label>
               <div className="border rounded overflow-hidden">
                 <Editor
@@ -286,7 +286,7 @@ export default function UnifiedSettingsDialog({
             {/* Test Button */}
             <div className="flex gap-2">
               <Button onClick={handleTestCode} variant="outline">
-                Test Code
+                {t.testCode}
               </Button>
             </div>
 
@@ -294,13 +294,13 @@ export default function UnifiedSettingsDialog({
             {showTestResult && (
               <div className="p-4 border rounded bg-muted">
                 <div className="flex items-center justify-between mb-2">
-                  <Label className="text-base font-semibold">Test Result</Label>
+                  <Label className="text-base font-semibold">{t.testResult}</Label>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowTestResult(false)}
                   >
-                    Close
+                    {t.closeTestResult}
                   </Button>
                 </div>
                 <pre className="text-sm bg-background p-4 rounded overflow-x-auto">
@@ -311,7 +311,7 @@ export default function UnifiedSettingsDialog({
 
             {/* Documentation */}
             <div className="space-y-2 text-sm text-muted-foreground">
-              <p className="font-semibold">Pre-loaded Libraries:</p>
+              <p className="font-semibold">{t.preloadedLibraries}</p>
               <ul className="space-y-1">
                 <li>
                   • <code className="bg-muted px-1 rounded">TshetUinh</code> - 音韻地位處理
@@ -329,7 +329,7 @@ export default function UnifiedSettingsDialog({
             {/* Start Button */}
             <div className="pt-4 border-t">
               <Button onClick={handleStart} className="w-full max-w-md" size="lg">
-                Start Flashcards
+                {t.startFlashcards}
               </Button>
             </div>
           </TabsContent>
@@ -339,13 +339,13 @@ export default function UnifiedSettingsDialog({
             <div className="max-w-2xl mx-auto space-y-6">
               {/* Language Switcher */}
               <div className="space-y-2">
-                <Label className="text-base font-semibold">Interface Language</Label>
+                <Label className="text-base font-semibold">{t.interfaceLanguage}</Label>
                 <LanguageSwitcher />
               </div>
 
               {/* Timing Settings */}
               <div className="space-y-4">
-                <Label className="text-base font-semibold">Timing Settings</Label>
+                <Label className="text-base font-semibold">{t.timingSettings}</Label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="word-time" className="text-sm">
@@ -379,16 +379,11 @@ export default function UnifiedSettingsDialog({
 
               {/* Instructions */}
               <div className="space-y-2">
-                <Label className="text-base font-semibold">Instructions</Label>
+                <Label className="text-base font-semibold">{t.instructions}</Label>
                 <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>
-                    • Press <kbd className="px-2 py-1 bg-muted rounded text-xs">s</kbd> to open
-                    settings
-                  </li>
-                  <li>
-                    • Press <kbd className="px-2 py-1 bg-muted rounded text-xs">ESC</kbd> to close
-                    dialogs
-                  </li>
+                  {t.instructionsList.map((instruction, index) => (
+                    <li key={index}>• {instruction}</li>
+                  ))}
                 </ul>
               </div>
             </div>

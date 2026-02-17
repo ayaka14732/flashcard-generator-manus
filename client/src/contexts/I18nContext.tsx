@@ -11,7 +11,17 @@ interface Translations {
   welcomeSubtitle: string;
   openSettings: string;
   
-  // Settings panel
+  // Settings dialog
+  settingsTitle: string;
+  settingsSubtitle: string;
+  tabStart: string;
+  tabSettings: string;
+  
+  // Preset
+  loadPresetTemplate: string;
+  selectPresetPlaceholder: string;
+  
+  // Configuration
   configuration: string;
   vocabularyUrl: string;
   vocabularyUrlPlaceholder: string;
@@ -24,9 +34,20 @@ interface Translations {
   instructions: string;
   instructionsList: string[];
   
+  // Code editor
+  postProcessingCode: string;
+  testCode: string;
+  testResult: string;
+  closeTestResult: string;
+  preloadedLibraries: string;
+  startFlashcards: string;
+  
+  // Settings page
+  interfaceLanguage: string;
+  timingSettings: string;
+  
   // Post-processing panel
   postProcessing: string;
-  testCode: string;
   resetToDefault: string;
   postProcessingInstructions: string;
   postProcessingInstructionsList: string[];
@@ -41,6 +62,7 @@ interface Translations {
   toastCompleted: string;
   toastTestSuccess: string;
   toastTestError: string;
+  toastPresetLoaded: string;
   
   // Buttons
   settings: string;
@@ -56,6 +78,12 @@ const translations: Record<Language, Translations> = {
     welcomeTitle: "Flashcard Generator",
     welcomeSubtitle: "Load your vocabulary file to begin. Press S for settings.",
     openSettings: "Open Settings",
+    settingsTitle: "Settings (S)",
+    settingsSubtitle: "Configure your flashcard experience",
+    tabStart: "Start",
+    tabSettings: "Settings",
+    loadPresetTemplate: "Load Preset Template",
+    selectPresetPlaceholder: "Select a preset template...",
     configuration: "Settings",
     vocabularyUrl: "Vocabulary URL",
     vocabularyUrlPlaceholder: "https://example.com/vocab.txt",
@@ -67,14 +95,18 @@ const translations: Record<Language, Translations> = {
     swapWordTranslationHint: "Display translation first, then word",
     instructions: "Instructions",
     instructionsList: [
-      "Provide a URL to a vocabulary file",
-      "File format: translation\\tword (tab-separated)",
-      "Adjust display timing as needed",
-      "Use post-processing for custom transformations",
-      "Press ESC to close settings",
+      "Press s to open settings",
+      "Press ESC to close dialogs",
     ],
-    postProcessing: "Post-Processing",
+    postProcessingCode: "Post-processing Code",
     testCode: "Test Code",
+    testResult: "Test Result",
+    closeTestResult: "Close",
+    preloadedLibraries: "Pre-loaded Libraries:",
+    startFlashcards: "Start Flashcards",
+    interfaceLanguage: "Interface Language",
+    timingSettings: "Timing Settings",
+    postProcessing: "Post-Processing",
     resetToDefault: "Reset to Default",
     postProcessingInstructions: "Instructions",
     postProcessingInstructionsList: [
@@ -91,6 +123,7 @@ const translations: Record<Language, Translations> = {
     toastCompleted: "Completed all flashcards! Starting over...",
     toastTestSuccess: "Test successful!\\nInput: {input}\\nOutput: {output}",
     toastTestError: "Function must return { word: string, translation: string }",
+    toastPresetLoaded: "Preset loaded: {name}",
     settings: "Settings (S)",
     postProcessingButton: "Post-Processing (E)",
     seconds: "seconds",
@@ -98,8 +131,14 @@ const translations: Record<Language, Translations> = {
   zh: {
     appTitle: "閃卡生成器",
     welcomeTitle: "閃卡生成器",
-    welcomeSubtitle: "加載詞庫文件開始學習。按 S 打開設置，按 E 打開後處理編輯器。",
+    welcomeSubtitle: "加載詞庫文件開始學習。按 S 打開設置。",
     openSettings: "打開設置",
+    settingsTitle: "設置 (S)",
+    settingsSubtitle: "配置你的閃卡體驗",
+    tabStart: "開始",
+    tabSettings: "設置",
+    loadPresetTemplate: "加載預設模板",
+    selectPresetPlaceholder: "選擇預設模板...",
     configuration: "配置",
     vocabularyUrl: "詞庫 URL",
     vocabularyUrlPlaceholder: "https://example.com/vocab.txt",
@@ -111,14 +150,18 @@ const translations: Record<Language, Translations> = {
     swapWordTranslationHint: "先顯示翻譯，再顯示詞",
     instructions: "說明",
     instructionsList: [
-      "提供詞庫文件的 URL",
-      "文件格式：翻譯\\t詞（製表符分隔）",
-      "根據需要調整顯示時間",
-      "使用後處理進行自定義轉換",
-      "按 ESC 關閉設置",
+      "按 s 打開設置",
+      "按 ESC 關閉對話框",
     ],
-    postProcessing: "後處理",
+    postProcessingCode: "後處理代碼",
     testCode: "測試代碼",
+    testResult: "測試結果",
+    closeTestResult: "關閉",
+    preloadedLibraries: "預加載庫：",
+    startFlashcards: "開始閃卡",
+    interfaceLanguage: "界面語言",
+    timingSettings: "時間設置",
+    postProcessing: "後處理",
     resetToDefault: "重置為默認",
     postProcessingInstructions: "說明",
     postProcessingInstructionsList: [
@@ -135,6 +178,7 @@ const translations: Record<Language, Translations> = {
     toastCompleted: "已完成所有閃卡！重新開始...",
     toastTestSuccess: "測試成功！\\n輸入：{input}\\n輸出：{output}",
     toastTestError: "函數必須返回 { word: string, translation: string }",
+    toastPresetLoaded: "預設已加載：{name}",
     settings: "設置 (S)",
     postProcessingButton: "後處理 (E)",
     seconds: "秒",
@@ -142,8 +186,14 @@ const translations: Record<Language, Translations> = {
   ja: {
     appTitle: "フラッシュカードジェネレーター",
     welcomeTitle: "フラッシュカードジェネレーター",
-    welcomeSubtitle: "語彙ファイルを読み込んで開始します。設定は S キー、後処理は E キーを押してください。",
+    welcomeSubtitle: "語彙ファイルを読み込んで開始します。設定は S キーを押してください。",
     openSettings: "設定を開く",
+    settingsTitle: "設定 (S)",
+    settingsSubtitle: "フラッシュカード体験を設定する",
+    tabStart: "開始",
+    tabSettings: "設定",
+    loadPresetTemplate: "プリセットテンプレートを読み込む",
+    selectPresetPlaceholder: "プリセットテンプレートを選択...",
     configuration: "設定",
     vocabularyUrl: "語彙 URL",
     vocabularyUrlPlaceholder: "https://example.com/vocab.txt",
@@ -155,14 +205,18 @@ const translations: Record<Language, Translations> = {
     swapWordTranslationHint: "翻訳を先に表示し、次に単語を表示",
     instructions: "説明",
     instructionsList: [
-      "語彙ファイルの URL を提供してください",
-      "ファイル形式：翻訳\\t単語（タブ区切り）",
-      "必要に応じて表示時間を調整してください",
-      "カスタム変換には後処理を使用してください",
-      "ESC キーを押して設定を閉じます",
+      "s キーを押して設定を開く",
+      "ESC キーを押してダイアログを閉じる",
     ],
-    postProcessing: "後処理",
+    postProcessingCode: "後処理コード",
     testCode: "コードをテスト",
+    testResult: "テスト結果",
+    closeTestResult: "閉じる",
+    preloadedLibraries: "プリロードされたライブラリ：",
+    startFlashcards: "フラッシュカードを開始",
+    interfaceLanguage: "インターフェース言語",
+    timingSettings: "タイミング設定",
+    postProcessing: "後処理",
     resetToDefault: "デフォルトにリセット",
     postProcessingInstructions: "説明",
     postProcessingInstructionsList: [
@@ -179,6 +233,7 @@ const translations: Record<Language, Translations> = {
     toastCompleted: "すべてのフラッシュカードが完了しました！最初から開始します...",
     toastTestSuccess: "テスト成功！\\n入力：{input}\\n出力：{output}",
     toastTestError: "関数は { word: string, translation: string } を返す必要があります",
+    toastPresetLoaded: "プリセットが読み込まれました：{name}",
     settings: "設定 (S)",
     postProcessingButton: "後処理 (E)",
     seconds: "秒",
