@@ -51,7 +51,7 @@ export default function Home() {
   // Settings state
   const [settingsOpen, setSettingsOpen] = useState(true);
   const [vocabularyUrl, setVocabularyUrl] = useState(
-    "https://files.manuscdn.com/user_upload_by_module/session_file/310519663323892428/dXrOgaNzaDXBwRPX.tsv"
+    "/sample_dict.tsv"
   );
   const [wordDisplayTime, setWordDisplayTime] = useState(2);
   const [bothDisplayTime, setBothDisplayTime] = useState(1);
