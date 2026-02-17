@@ -126,29 +126,20 @@ export default function UnifiedSettingsDialog({
   setCode,
 }: UnifiedSettingsDialogProps) {
   const { t } = useI18n();
-  const [editorCode, setEditorCode] = useState(code);
-  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [testResult, setTestResult] = useState<string | null>(null);
   const [showTestResult, setShowTestResult] = useState(false);
 
   const handleEditorChange = (value: string | undefined) => {
     if (value !== undefined) {
-      setEditorCode(value);
-      setHasUnsavedChanges(true);
+      setCode(value);
     }
-  };
-
-  const handleSaveCode = () => {
-    setCode(editorCode);
-    setHasUnsavedChanges(false);
-    toast.success("Code saved successfully");
   };
 
   const handleTestCode = () => {
     try {
       const testInput = { word: "test", translation: "測試" };
       // eslint-disable-next-line no-eval
-      eval(editorCode);
+      eval(code);
       // @ts-ignore
       const result = process(testInput);
       setTestResult(JSON.stringify(result, null, 2));
@@ -162,12 +153,16 @@ export default function UnifiedSettingsDialog({
   const handlePresetChange = (presetKey: string) => {
     const preset = PRESETS[presetKey as keyof typeof PRESETS];
     if (preset) {
-      setEditorCode(preset.code);
+      setCode(preset.code);
       setVocabularyUrl(preset.vocabularyUrl);
       setSwapWordTranslation(preset.swap);
-      setHasUnsavedChanges(true);
       toast.success(`Preset loaded: ${preset.name}`);
     }
+  };
+
+  const handleStart = () => {
+    onLoadVocabulary();
+    onClose();
   };
 
   return (
@@ -199,113 +194,18 @@ export default function UnifiedSettingsDialog({
             </button>
           </div>
           <p className="text-sm text-muted-foreground">
-            Configure vocabulary, timing, and post-processing code
+            Configure your flashcard experience
           </p>
         </DialogHeader>
 
-        <Tabs defaultValue="config" className="flex-1 flex flex-col overflow-hidden">
+        <Tabs defaultValue="start" className="flex-1 flex flex-col overflow-hidden">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="config">Configuration</TabsTrigger>
-            <TabsTrigger value="editor">Code Editor</TabsTrigger>
+            <TabsTrigger value="start">Start</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="config" className="flex-1 overflow-y-auto mt-4 space-y-6">
-            <div className="max-w-2xl mx-auto space-y-6">
-              {/* Language Switcher */}
-              <div className="space-y-2">
-                <Label className="text-base font-semibold">Interface Language</Label>
-                <LanguageSwitcher />
-              </div>
-
-              {/* Vocabulary URL */}
-              <div className="space-y-2">
-                <Label htmlFor="vocab-url" className="text-base font-semibold">
-                  Vocabulary URL
-                </Label>
-                <Input
-                  id="vocab-url"
-                  type="text"
-                  value={vocabularyUrl}
-                  onChange={(e) => setVocabularyUrl(e.target.value)}
-                  placeholder="https://example.com/vocabulary.tsv"
-                />
-                <p className="text-sm text-muted-foreground">
-                  Format: translation\tword (tab-separated, one per line)
-                </p>
-                <Button onClick={onLoadVocabulary} className="w-full max-w-md">
-                  Load Vocabulary
-                </Button>
-              </div>
-
-              {/* Timing Settings */}
-              <div className="space-y-4">
-                <Label className="text-base font-semibold">Timing Settings</Label>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="word-time" className="text-sm">
-                      {t.wordDisplayTime}
-                    </Label>
-                    <Input
-                      id="word-time"
-                      type="number"
-                      min="0.1"
-                      step="0.1"
-                      value={wordDisplayTime}
-                      onChange={(e) => setWordDisplayTime(parseFloat(e.target.value))}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="both-time" className="text-sm">
-                      {t.bothDisplayTime}
-                    </Label>
-                    <Input
-                      id="both-time"
-                      type="number"
-                      min="0.1"
-                      step="0.1"
-                      value={bothDisplayTime}
-                      onChange={(e) => setBothDisplayTime(parseFloat(e.target.value))}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Swap Setting */}
-              <div className="flex items-center justify-between p-4 border rounded">
-                <div className="space-y-1">
-                  <Label htmlFor="swap-toggle" className="text-base font-semibold cursor-pointer">
-                    {t.swapWordTranslation}
-                  </Label>
-                  <p className="text-sm text-muted-foreground">
-                    Display translation first, then word
-                  </p>
-                </div>
-                <Switch
-                  id="swap-toggle"
-                  checked={swapWordTranslation}
-                  onCheckedChange={setSwapWordTranslation}
-                />
-              </div>
-
-              {/* Instructions */}
-              <div className="space-y-2">
-                <Label className="text-base font-semibold">Instructions</Label>
-                <ul className="text-sm text-muted-foreground space-y-1">
-                  <li>
-                    • Press <kbd className="px-2 py-1 bg-muted rounded text-xs">s</kbd> to open
-                    settings
-                  </li>
-                  <li>
-                    • Press <kbd className="px-2 py-1 bg-muted rounded text-xs">ESC</kbd> to close
-                    dialogs
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="editor" className="flex-1 overflow-y-auto mt-4 space-y-4">
+          {/* Page 1: Start Page */}
+          <TabsContent value="start" className="flex-1 overflow-y-auto mt-4 space-y-4">
             {/* Preset Selector */}
             <div className="space-y-2">
               <Label htmlFor="preset-select" className="text-base font-semibold">
@@ -325,21 +225,51 @@ export default function UnifiedSettingsDialog({
               </Select>
             </div>
 
-            {/* Editor */}
+            {/* Vocabulary URL */}
+            <div className="space-y-2">
+              <Label htmlFor="vocab-url" className="text-base font-semibold">
+                Vocabulary URL
+              </Label>
+              <Input
+                id="vocab-url"
+                type="text"
+                value={vocabularyUrl}
+                onChange={(e) => setVocabularyUrl(e.target.value)}
+                placeholder="https://example.com/vocabulary.tsv"
+                className="max-w-2xl"
+              />
+              <p className="text-sm text-muted-foreground">
+                Format: translation\tword (tab-separated, one per line)
+              </p>
+            </div>
+
+            {/* Swap Setting */}
+            <div className="flex items-center justify-between p-4 border rounded max-w-2xl">
+              <div className="space-y-1">
+                <Label htmlFor="swap-toggle" className="text-base font-semibold cursor-pointer">
+                  {t.swapWordTranslation}
+                </Label>
+                <p className="text-sm text-muted-foreground">
+                  Display translation first, then word
+                </p>
+              </div>
+              <Switch
+                id="swap-toggle"
+                checked={swapWordTranslation}
+                onCheckedChange={setSwapWordTranslation}
+              />
+            </div>
+
+            {/* Code Editor */}
             <div className="space-y-2">
               <Label className="text-base font-semibold">
                 Post-processing Code
-                {hasUnsavedChanges && (
-                  <span className="ml-2 text-sm text-yellow-600 dark:text-yellow-400">
-                    (Unsaved changes)
-                  </span>
-                )}
               </Label>
               <div className="border rounded overflow-hidden">
                 <Editor
-                  height="600px"
+                  height="500px"
                   defaultLanguage="javascript"
-                  value={editorCode}
+                  value={code}
                   onChange={handleEditorChange}
                   theme="vs-dark"
                   options={{
@@ -353,11 +283,8 @@ export default function UnifiedSettingsDialog({
               </div>
             </div>
 
-            {/* Action Buttons */}
+            {/* Test Button */}
             <div className="flex gap-2">
-              <Button onClick={handleSaveCode} disabled={!hasUnsavedChanges}>
-                Save Changes
-              </Button>
               <Button onClick={handleTestCode} variant="outline">
                 Test Code
               </Button>
@@ -397,6 +324,73 @@ export default function UnifiedSettingsDialog({
                   (tupa, baxter, etc.)
                 </li>
               </ul>
+            </div>
+
+            {/* Start Button */}
+            <div className="pt-4 border-t">
+              <Button onClick={handleStart} className="w-full max-w-md" size="lg">
+                Start Flashcards
+              </Button>
+            </div>
+          </TabsContent>
+
+          {/* Page 2: Settings */}
+          <TabsContent value="settings" className="flex-1 overflow-y-auto mt-4 space-y-6">
+            <div className="max-w-2xl mx-auto space-y-6">
+              {/* Language Switcher */}
+              <div className="space-y-2">
+                <Label className="text-base font-semibold">Interface Language</Label>
+                <LanguageSwitcher />
+              </div>
+
+              {/* Timing Settings */}
+              <div className="space-y-4">
+                <Label className="text-base font-semibold">Timing Settings</Label>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="word-time" className="text-sm">
+                      {t.wordDisplayTime}
+                    </Label>
+                    <Input
+                      id="word-time"
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value={wordDisplayTime}
+                      onChange={(e) => setWordDisplayTime(parseFloat(e.target.value))}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="both-time" className="text-sm">
+                      {t.bothDisplayTime}
+                    </Label>
+                    <Input
+                      id="both-time"
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value={bothDisplayTime}
+                      onChange={(e) => setBothDisplayTime(parseFloat(e.target.value))}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Instructions */}
+              <div className="space-y-2">
+                <Label className="text-base font-semibold">Instructions</Label>
+                <ul className="text-sm text-muted-foreground space-y-1">
+                  <li>
+                    • Press <kbd className="px-2 py-1 bg-muted rounded text-xs">s</kbd> to open
+                    settings
+                  </li>
+                  <li>
+                    • Press <kbd className="px-2 py-1 bg-muted rounded text-xs">ESC</kbd> to close
+                    dialogs
+                  </li>
+                </ul>
+              </div>
             </div>
           </TabsContent>
         </Tabs>
